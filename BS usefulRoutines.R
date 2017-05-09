@@ -59,6 +59,8 @@ randomCells <- function(sObj, fract=0.1) {
   colnames(sObj@data)[sample(1:nCells, floor(nCells*fract), replace = F)]
 }
 
-# smallTSNEPlot - calls TSNEPlot for randome subset of cells
-smallTSNEPlot <- function(sObj, fract=0.1, labelsOn=T) TSNEPlot(sObj, cells.use = randomCells(sObj, fract), do.label=labelsOn)
-
+# smallTSNEPlot - calls TSNEPlot for random subset of cells
+#   sObj : the Seurat object
+#   fract : optional argument to specify the fraction of cells to use.  Default 0.1
+#   ... : anything you want to pass to TNSEPlot (like do.label=T)
+smallTSNEPlot <- function(sObj, fract=0.1, ...) TSNEPlot(sObj, cells.use = randomCells(sObj, fract), ...)
