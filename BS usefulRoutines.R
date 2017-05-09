@@ -1,13 +1,18 @@
 #Useful routines from Bernardo
 
-# pass in a marker object produced by FindAllMarkers and return the top N genes in cluster=clustNum
+# topNGenes - extract top genes for a particular cluster from an object produced by FindAllMarkers
+#   markers : the object created by FindAllMarkers 
+#   clustNum : the number of the cluster to analyze
+#   N : how many genes to return.  Defacults to 20
 topNGenes <- function(markers, clustNum, N=20) {
   head(subset(markers, cluster==clustNum), N)
 }
 
-# returns the genes with avg_diff>thresh (or avg_diff<thresh if thresh<0) in cluster=clustNum
-# markers is a FindAllMarkers object
-# N limits number of genes to be return but defaults to NULL which means return all genes
+# topTGenes - extract top genes from a FindAllMarkers object with avg_diff set by threshold
+#   markers : the object created by FindAllMarkers 
+#   clustNum : the number of the cluster to analyze
+#   thresh : the threshold to use.  Interpreted as requesting avg_diff>=0 if thresh>=0 and avg_diff<thresh otherwise
+#   N : limit of number of genes to be return but defaults to NULL which means return all genes
 topTGenes <- function(markers, clustNum, thresh=0.1, N=NULL) {
   if (thresh>=0) {
     if (is.null(N))
