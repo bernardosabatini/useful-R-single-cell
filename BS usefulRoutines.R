@@ -64,3 +64,13 @@ randomCells <- function(sObj, fract=0.1) {
 #   fract : optional argument to specify the fraction of cells to use.  Default 0.1
 #   ... : anything you want to pass to TNSEPlot (like do.label=T)
 smallTSNEPlot <- function(sObj, fract=0.1, ...) TSNEPlot(sObj, cells.use = randomCells(sObj, fract), ...)
+
+# cCells - return cell names of all cells in a cluster
+#   sObj : a Seurat object
+#   clustNum : the number of the cluster
+cCells <- function(sObj, clustNum) {
+  if (length(clustNum)==1) colnames(sObj@data)[which(sObj@ident %in% clustNum)]
+  else colnames(sObj@data)[which(sObj@ident %in% clustNum)]
+}
+
+
