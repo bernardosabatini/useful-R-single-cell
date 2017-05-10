@@ -36,11 +36,10 @@ FindClustersICA <- function(object, genes.use = NULL, ic.use = NULL, pc.use = NU
   }
   # if any SNN building parameters are provided or it hasn't been built, build a new SNN
   else{
-    print("calling build")
     object <- BuildSNNICA(object, genes.use, ic.use, pc.use, k.param, k.scale,
                           plot.SNN, prune.SNN, do.sparse, print.output)
   }
-  print("passed line 42")
+
   # deal with sparse SNNs
   if (length(object@snn.sparse) > 1) {
     SNN.use <- object@snn.sparse

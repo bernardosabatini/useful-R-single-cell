@@ -1,3 +1,5 @@
+# requires library(FNN)
+
 BuildSNNICA <- function(object, genes.use = NULL, ic.use = NULL, pc.use = NULL, k.param = 10,
                         k.scale = 10, plot.SNN = FALSE, prune.SNN = 1/15,
                         do.sparse = FALSE, print.output = TRUE) {
@@ -6,7 +8,6 @@ BuildSNNICA <- function(object, genes.use = NULL, ic.use = NULL, pc.use = NULL, 
     genes.use <- object@var.genes
     data.use <- t(as.matrix(object@data[genes.use, ]))
   } else if (!is.null(ic.use)) {
-    print("**** USING ICA ***")
     data.use <- as.matrix(object@ica.rot[, ic.use])
   } else if (!is.null(pc.use)) {
     data.use <- as.matrix(object@pca.rot[, pc.use])
