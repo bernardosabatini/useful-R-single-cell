@@ -1,3 +1,44 @@
+FindAllICs <- function(object, ics.use = NULL, sigma.use = 2, test.use = "bimod",
+                           min.pct = 0.1, min.diff.pct = 0.05, print.bar = FALSE, 
+                           only.pos = FALSE, max.cells.per.ident = Inf, return.thresh = 1e-2,
+                           do.print = FALSE, random.seed = 1, min.cells = 3) {
+  ics.use=set.ifnull(ics.use, 1:ncol(object@ica.x)) # get the numbers of ICs to use
+  icNames.use=paste("IC", ics.use, sep="") # turns the numbers into names
+  
+  ident.use=object@ident
+  if ((test.use=="roc") && (return.thresh==1e-2)) return.thresh=0.7
+  idents.all=sort(unique(object@ident))
+  ics.de=list()
+  if (max.cells.per.ident < Inf) object=SubsetData(object, max.cells.per.ident = max.cells.per.ident, random.seed = random.seed)
+  
+  for(i in 1:length(idents.all)) {
+    print(paste("Cluster", i))
+    ics.de[[i]]=FindICs(object,ident.1 = idents.all[i], ident.2 = NULL, ics.use = ics.use, sigma.use = sigma.use, 
+                              test.use = test.use, min.pct = min.pct, min.diff.pct = min.diff.pct, print.bar = print.bar, min.cells = min.cells)
+    if (do.print) print(paste("Calculating cluster", idents.all[i]))
+  }
+  gde.all=data.frame()
+  for(i in 1:length(idents.all)) {
+    if (is.null(unlist(ics.de[i]))) next;
+    gde=ics.de[[i]]
+    if (nrow(gde)>0) {
+      if (test.use=="roc") {
+        gde=subset(gde,(myAUC>return.thresh|myAUC<(1-return.thresh)))
+      } else {
+        gde=gde[order(gde$p_val,-gde$avg_diff),]
+        gde=subset(gde,p_val<return.thresh)
+      }
+      if (nrow(gde)>0) gde$cluster=idents.all[i]; gde$IC=rownames(gde)
+      if (nrow(gde)>0) gde.all=rbind(gde.all,gde)
+    }
+  }
+  if(only.pos) return(subset(gde.all,avg_diff>0))
+  return(gde.all)
+}
+
+
+
+
 FindICs <- function(object, ident.1, ident.2 = NULL, ics.use = NULL, sigma.use = 2, 
                         test.use = "bimod", min.pct = 0.1, min.diff.pct = -Inf, print.bar = FALSE,
                         only.pos = FALSE, max.cells.per.ident = Inf, random.seed = 1, 
@@ -46,24 +87,10 @@ FindICs <- function(object, ident.1, ident.2 = NULL, ics.use = NULL, sigma.use =
     return(NULL)
   }
   
-  #gene selection (based on percent expressed)
-  # thresh.min=object@is.expr
-  # data.temp1=round(apply(object@ic.rot[genes.use, cells.1, drop = F],1,function(x)return(length(x[x>thresh.min])/length(x))),3)
-  # data.temp2=round(apply(object@data[genes.use, cells.2, drop = F],1,function(x)return(length(x[x>thresh.min])/length(x))),3)
-  # data.alpha=cbind(data.temp1,data.temp2); colnames(data.alpha)=c("pct.1","pct.2")
-  # alpha.min=apply(data.alpha,1,max); names(alpha.min)=rownames(data.alpha); genes.use=names(which(alpha.min>min.pct))
-  # alpha.diff=alpha.min-apply(data.alpha,1,min); 
-  # genes.use=names(which(alpha.min>min.pct&alpha.diff>min.diff.pct))
+  #IC selection (based on percent expressed)
   zData.1=t(scale(t(object@ica.rot[cells.1, icNames.use]), center = T, scale = T));
   zData.2=t(scale(t(object@ica.rot[cells.2, icNames.use]), center = T, scale = T));
 
-    print(dim(zData.1))
-  print(dim(zData.2))
-  print(mean(zData.1[,"IC45"]))
-  print(mean(zData.2[,"IC45"]))
-  print(mean(object@ica.rot[cells.1, "IC45"]))
-  print(mean(object@ica.rot[cells.2, "IC45"]))
-  
   data.temp1=round(apply(zData.1,2,function(x)return(length(which(abs(x)>=sigma.use))/length(x))),3)
   data.temp2=round(apply(zData.2,2,function(x)return(length(which(abs(x)>=sigma.use))/length(x))),3)
   data.alpha=cbind(data.temp1,data.temp2); colnames(data.alpha)=c("pct.1","pct.2")
