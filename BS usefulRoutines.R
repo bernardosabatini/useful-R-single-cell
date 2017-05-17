@@ -116,6 +116,7 @@ undoExp <- function(a) {
   return(aax)
 }
 
+normGeneData <- function(gData, totalExp=10000) apply(gData, 2, function(x)(totalExp*x/sum(x)))
 
 # mycor - simple wrapper for cor returning whole number percentages
 mycor <- function (c1, c2) {
