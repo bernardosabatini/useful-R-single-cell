@@ -31,6 +31,25 @@ topTGenes <- function(markers, clustNum, thresh=0.1, N=NULL) {
   }
 }
 
+
+topICGenes <- function(sObj, ic.use, N=5, use.abs=T) {
+  ddd=as.matrix(t(sObj@ica.x[,ic.use]))
+  colnames(ddd)<-rownames(sObj@ica.x)
+  if (use.abs) ddd=abs(ddd)
+  topC(ddd, N)
+}
+
+topC <- function(cp, N=20) {
+  cp[which(is.na(cp))] <- 0
+  nEnt = length(cp)
+  tts = sort(cp[,colnames(cp)])
+  if (N < 0)
+    tts[1:-N]
+  else
+    tts[(nEnt - N):nEnt]
+}
+
+
 # cycleAllTop - 
 #   sObj : a Seurat object
 #   markers : results of FindAllMarkers

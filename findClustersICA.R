@@ -1,4 +1,4 @@
-FindClustersICA <- function(object, genes.use = NULL, ic.use = NULL, pc.use = NULL, k.param = 30,
+FindClustersICA <- function(object, genes.use = NULL, ics.use = NULL, pc.use = NULL, k.param = 30,
                             k.scale = 25, plot.SNN = FALSE, prune.SNN = 1/15,
                             save.SNN = FALSE, reuse.SNN = FALSE, do.sparse = FALSE, 
                             modularity.fxn = 1, resolution = 0.8, algorithm = 1,
@@ -22,7 +22,7 @@ FindClustersICA <- function(object, genes.use = NULL, ic.use = NULL, pc.use = NU
     }
   }
   
-  if((missing(genes.use) && missing(ic.use) && missing(pc.use) && missing(k.param) && missing(k.scale) && 
+  if((missing(genes.use) && missing(ics.use) && missing(pc.use) && missing(k.param) && missing(k.scale) && 
       missing(prune.SNN) && snn.built) || reuse.SNN){
     save.SNN <- TRUE
     if (reuse.SNN && !snn.built){
@@ -36,7 +36,7 @@ FindClustersICA <- function(object, genes.use = NULL, ic.use = NULL, pc.use = NU
   }
   # if any SNN building parameters are provided or it hasn't been built, build a new SNN
   else{
-    object <- BuildSNNICA(object, genes.use, ic.use, pc.use, k.param, k.scale,
+    object <- BuildSNNICA(object, genes.use, ics.use, pc.use, k.param, k.scale,
                           plot.SNN, prune.SNN, do.sparse, print.output)
   }
 

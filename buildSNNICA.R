@@ -1,14 +1,14 @@
 # requires library(FNN)
 
-BuildSNNICA <- function(object, genes.use = NULL, ic.use = NULL, pc.use = NULL, k.param = 10,
+BuildSNNICA <- function(object, genes.use = NULL, ics.use = NULL, pc.use = NULL, k.param = 10,
                         k.scale = 10, plot.SNN = FALSE, prune.SNN = 1/15,
                         do.sparse = FALSE, print.output = TRUE) {
   
-  if (is.null(genes.use) && is.null(pc.use) && is.null(ic.use)) {
+  if (is.null(genes.use) && is.null(pc.use) && is.null(ics.use)) {
     genes.use <- object@var.genes
     data.use <- t(as.matrix(object@data[genes.use, ]))
-  } else if (!is.null(ic.use)) {
-    data.use <- as.matrix(object@ica.rot[, ic.use])
+  } else if (!is.null(ics.use)) {
+    data.use <- as.matrix(object@ica.rot[, ics.use])
   } else if (!is.null(pc.use)) {
     data.use <- as.matrix(object@pca.rot[, pc.use])
   } else if (!is.null(genes.use) && is.null(pc.use)) {
