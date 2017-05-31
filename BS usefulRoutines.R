@@ -2,7 +2,7 @@
 
 
 #____________________________
-# ROUTINES to interact with FindAllMarkers
+# ROUTINES to interact with FindAllMarkers and FindAllICs
 
 # topNGenes - extract top genes for a particular cluster from an object produced by FindAllMarkers
 #   markers : the object created by FindAllMarkers 
@@ -54,6 +54,18 @@ cycleAllTop <- function(sObj, markers, clusterIds, nGenes, allAtOnce=F) {
     if (allAtOnce) FeaturePlot(sObj, cGenes)  
     else for (gene in cGenes) FeaturePlot(sObj, gene)
   }
+}
+
+
+
+#______________________________________________
+# ROUTINES to get info on ICs
+icComps <- function(sObj, icName, howMany=5) {
+  data=sObj@ica.x[,icName]
+  absSort=sort.int(abs(data), decreasing = T, index.return = T)
+  returnData=data[1:howMany]
+  names(returnData) <- rownames(sObj@ica.x)[absSort$ix[1:howMany]]
+  return(returnData)
 }
 
 
