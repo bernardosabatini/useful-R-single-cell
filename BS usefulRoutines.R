@@ -109,6 +109,10 @@ cCells <- function(sObj, clustNum) {
   else colnames(sObj@data)[which(sObj@ident %in% clustNum)]
 }
 
+cCellsIndex <- function(sObj, clustNum) {
+  if (length(clustNum)==1) which(sObj@ident %in% clustNum)
+  else which(sObj@ident %in% clustNum)
+}
 # randomCells - return the names of a random subsets of the cells an Seurat object
 randomCells <- function(sObj, fract=0.1) {
   nCells=dim(sObj@data)[2]
