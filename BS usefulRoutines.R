@@ -188,3 +188,9 @@ cg <- function(eData, genes, cells=NULL) {
   }
 }
 
+
+realLogVarDivMean <- function(x)(log(var(x)/mean(x)))
+realLog10VarDivMean <- function(x)(log10(var(x)/mean(x)))
+logMean <- function(x)(log(mean(x)))
+log10Mean <- function(x)(log10(mean(x)))
+

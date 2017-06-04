@@ -7,7 +7,6 @@ NormalizeData <- function(object, total.expr=1e4, use.raw=0) {
   cat("Scaling data ", file = stderr())
   pb <- txtProgressBar(min = 0, max = max.bin, style = 3, file = stderr())
 
-
   if (use.raw) data.use=object@raw.data[genes.use, cells.use]
   else data.use=object@data
   
